@@ -56,6 +56,52 @@
 })();
 </script>
 
+<!-- Load Stripe.js on your website. -->
+<script src="https://js.stripe.com/v3"></script>
+
+<!-- Create a button that your customers click to complete their purchase. Customize the styling to suit your branding. -->
+<button
+  style="background-color:#6772E5;color:#FFF;padding:8px 12px;border:0;border-radius:4px;font-size:1em"
+  id="checkout-button-price_1H26AzIaD9I3tHt3ghF5PCjp"
+  role="link"
+  type="button"
+>
+  Checkout with Subscription every Day
+</button>
+
+<div id="error-message"></div>
+
+<script>
+(function() {
+  var stripe = Stripe('pk_test_0eJEwmkLUm1dor8Ztrjs7hE100OLVRlPNt');
+
+  var checkoutButton = document.getElementById('checkout-button-price_1H26AzIaD9I3tHt3ghF5PCjp');
+  checkoutButton.addEventListener('click', function () {
+    // When the customer clicks on the button, redirect
+    // them to Checkout.
+    stripe.redirectToCheckout({
+      lineItems: [{price: 'price_1H26AzIaD9I3tHt3ghF5PCjp', quantity: 1}],
+      mode: 'subscription',
+      // Do not rely on the redirect to the successUrl for fulfilling
+      // purchases, customers may not always reach the success_url after
+      // a successful payment.
+      // Instead use one of the strategies described in
+      // https://stripe.com/docs/payments/checkout/fulfillment
+      successUrl: 'https://biciamigos.com',
+      cancelUrl: 'https://biciamigos.com',
+    })
+    .then(function (result) {
+      if (result.error) {
+        // If `redirectToCheckout` fails due to a browser or network
+        // error, display the localized error message to your customer.
+        var displayError = document.getElementById('error-message');
+        displayError.textContent = result.error.message;
+      }
+    });
+  });
+})();
+</script>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
